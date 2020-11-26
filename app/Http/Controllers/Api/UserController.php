@@ -21,26 +21,23 @@ class UserController extends Controller
         $user = $userService->findByIDWithCompany($request->id);
 
         if (!$user) {
-            $response = $this->apiError("User Not Found", 404);
+            $this->logResponse($request, "User Not Found");
 
-            // log response
-            $this->logResponse($request, $response);
-
-            return $response;
+            return $this->apiError("User Not Found", 404);
         }
 
-        $response = $this->apiSuccess("Success get user", [
+        $data = [
             'id' => $user->id,
             'company' => $user->company->name,
             'fullName' => "$user->first_name $user->last_name",
             'email' => $user->email,
             'account' => $user->account
-        ]);
+        ];
 
         // log response
-        $this->logResponse($request, $response);
+        $this->logResponse($request, $data);
 
-        return $response;
+        return $this->apiSuccess("Success get user", $data);
     }
 
     public function getListUser(Request $request, UserService $userService)
@@ -51,15 +48,12 @@ class UserController extends Controller
         $users = $userService->listUserWithCompany();
 
         if ($users->isEmpty()) {
-            $response = $this->apiSuccess("Success but users empty", $users);
+            $this->logResponse($request, "Success but users empty");
 
-            // log response
-            $this->logResponse($request, $response);
-
-            return $response;
+            return $this->apiSuccess("Success but users empty", $users);
         }
 
-        $response = $this->apiSuccess("Success get users", $users->map(function ($item) {
+        $data = $users->map(function ($item) {
             $res['id'] = $item->id;
             $res['company'] = $item->company->name;
             $res['fullName'] = "$item->first_name $item->last_name";
@@ -67,11 +61,11 @@ class UserController extends Controller
             $res['account'] = $item->account;
 
             return $res;
-        }));
+        });
 
         // log response
-        $this->logResponse($request, $response);
+        $this->logResponse($request, $data);
 
-        return $response;
+        return $this->apiSuccess("Success get users", $data);
     }
 }
