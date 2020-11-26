@@ -29,4 +29,5 @@ Route::group(['middleware' => ['force.json']], function () {
     Route::post('reimburse', [TransactionController::class, 'reimburse']);
     Route::post('disburse', [TransactionController::class, 'disburse']);
     Route::post('close', [TransactionController::class, 'close']);
+    Route::post('getLogTransaction', [TransactionController::class, 'getLogTransaction']);
 });
