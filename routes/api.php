@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\CompanyBudgetController;
 use App\Http\Controllers\Api\CompanyController;
+use App\Http\Controllers\Api\TransactionController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,4 +24,9 @@ Route::group(['middleware' => ['force.json']], function () {
     // company budget
     Route::post('getCompanyBudget', [CompanyBudgetController::class, 'getCompanyBudget']);
     Route::post('getListCompanyBudget', [CompanyBudgetController::class, 'getListCompanyBudget']);
+
+    // transaction
+    Route::post('reimburse', [TransactionController::class, 'reimburse']);
+    Route::post('disburse', [TransactionController::class, 'disburse']);
+    Route::post('close', [TransactionController::class, 'close']);
 });
