@@ -11,12 +11,14 @@ Route::group(['middleware' => ['force.json']], function () {
     Route::post('getListUser', [UserController::class, 'getListUser']);
     Route::post('createUser', [UserController::class, 'createUser']);
     Route::post('updateUser', [UserController::class, 'updateUser']);
+    Route::post('deleteUser', [UserController::class, 'deleteUser']);
 
     // company
     Route::post('getCompany', [CompanyController::class, 'getCompany']);
     Route::post('getListCompany', [CompanyController::class, 'getListCompany']);
     Route::post('createCompany', [CompanyController::class, 'createCompany']);
     Route::post('updateCompany', [CompanyController::class, 'updateCompany']);
+    Route::post('deleteCompany', [CompanyController::class, 'deleteCompany']);
 
     // company budget
     Route::post('getCompanyBudget', [CompanyBudgetController::class, 'getCompanyBudget']);
