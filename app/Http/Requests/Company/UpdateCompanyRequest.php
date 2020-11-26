@@ -14,6 +14,7 @@ class UpdateCompanyRequest extends FormRequest
     public function rules()
     {
         return [
+            'id' => 'required|integer',
             'name' => 'nullable|string|min:3|max:255',
             'address' => 'nullable|string|min:3|max:100',
         ];

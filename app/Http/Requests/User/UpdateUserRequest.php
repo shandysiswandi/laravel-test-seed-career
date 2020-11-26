@@ -14,6 +14,7 @@ class UpdateUserRequest extends FormRequest
     public function rules()
     {
         return [
+            'id' => 'required|integer',
             'first_name' => 'nullable|string|min:3|max:100',
             'last_name' => 'nullable|string|min:3|max:100',
             'email' => 'nullable|email|unique:users,email,' . request()->id . '|max:100',
