@@ -6,6 +6,7 @@ use App\Helpers\HttpStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\CreateUserRequest;
 use App\Http\Requests\User\GetUserRequest;
+use App\Services\CompanyService;
 use App\Services\UserService;
 use App\Traits\ApiResponse;
 use App\Traits\Logger;
@@ -15,12 +16,21 @@ class UserController extends Controller
 {
     use ApiResponse, Logger;
 
-    public function getUser(GetUserRequest $request, UserService $userService)
+    protected $userService;
+    protected $companyService;
+
+    public function __construct(UserService $userService, CompanyService $companyService)
+    {
+        $this->userService = $userService;
+        $this->companyService = $companyService;
+    }
+
+    public function getUser(GetUserRequest $request)
     {
         // log request
         $this->logRequest($request, ['id' => $request->id]);
 
-        $user = $userService->findByIDWithCompany($request->id);
+        $user = $this->userService->findByIDWithCompany($request->id);
 
         if (!$user) {
             $this->logResponse($request, "User Not Found");
@@ -42,12 +52,12 @@ class UserController extends Controller
         return $this->apiSuccess("Success get user", $data);
     }
 
-    public function getListUser(Request $request, UserService $userService)
+    public function getListUser(Request $request)
     {
         // log request
         $this->logRequest($request);
 
-        $users = $userService->listUserWithCompany();
+        $users = $this->userService->listUserWithCompany();
 
         if ($users->isEmpty()) {
             $this->logResponse($request, "Success but users empty");
@@ -71,19 +81,19 @@ class UserController extends Controller
         return $this->apiSuccess("Success get users", $data);
     }
 
-    public function createUser(CreateUserRequest $request, UserService $userService)
+    public function createUser(CreateUserRequest $request)
     {
         // log request
         $this->logRequest($request);
 
-        $company = $userService->companyService->findById($request->company_id);
+        $company = $this->companyService->findById($request->company_id);
         if (!$company) {
             $this->logResponse($request, "Company ID given not found");
 
             return $this->apiError("Company ID given not found", HttpStatus::$NOT_FOUND);
         }
 
-        $user = $userService->createUser($request);
+        $user = $this->userService->createUser($request);
         if (!$user) {
             $this->logResponse($request, "Failed create user");
 
