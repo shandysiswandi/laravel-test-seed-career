@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Helpers\HttpStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\CreateUserRequest;
+use App\Http\Requests\User\DeleteUserRequest;
 use App\Http\Requests\User\GetUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Services\CompanyService;
@@ -149,5 +150,29 @@ class UserController extends Controller
         $this->logResponse($request, $data);
 
         return $this->apiSuccess("Success update user", $data, HttpStatus::$OK);
+    }
+
+    public function deleteUser(DeleteUserRequest $request)
+    {
+        // log request
+        $this->logRequest($request);
+
+        $user = $this->userService->findByID($request->id);
+        if (!$user) {
+            $this->logResponse($request, "User not found");
+
+            return $this->apiError("User not found", HttpStatus::$NOT_FOUND);
+        }
+
+        $deleteUser = $this->userService->deleteUser($user);
+        if (!$deleteUser) {
+            $this->logResponse($request, "Failed delete user");
+
+            return $this->apiError("Failed delete user", HttpStatus::$BAD_REQUEST);
+        }
+
+        $this->logResponse($request);
+
+        return $this->apiSuccess("Success delete user", null, HttpStatus::$OK);
     }
 }
