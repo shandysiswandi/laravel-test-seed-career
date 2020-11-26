@@ -15,9 +15,9 @@ class CreateUserRequest extends FormRequest
     {
         return [
             'company_id' => 'required|integer',
-            'first_name' => 'required|string',
-            'last_name' => 'required|string',
-            'email' => 'required|email|unique:users',
+            'first_name' => 'required|string|min:3|max:100',
+            'last_name' => 'required|string|min:3|max:100',
+            'email' => 'required|email|unique:users|max:100',
         ];
     }
 }
