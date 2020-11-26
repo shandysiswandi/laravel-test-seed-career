@@ -6,13 +6,6 @@ use App\Models\User;
 
 class UserService
 {
-    public $companyService;
-
-    public function __construct(CompanyService $companyService)
-    {
-        $this->companyService = $companyService;
-    }
-
     public function findByIDWithCompany($id)
     {
         return User::with('company')->find($id);
