@@ -4,7 +4,7 @@ namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class DeleteteUserRequest extends FormRequest
+class DeleteUserRequest extends FormRequest
 {
     public function authorize()
     {
