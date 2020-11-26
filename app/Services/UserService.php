@@ -6,13 +6,13 @@ use App\Models\User;
 
 class UserService
 {
-    public function findByID($id)
+    public function findByIDWithCompany($id)
     {
-        return User::find($id);
+        return User::with('company')->find($id);
     }
 
-    public function listUser()
+    public function listUserWithCompany()
     {
-        return User::all();
+        return User::with('company')->get();
     }
 }
