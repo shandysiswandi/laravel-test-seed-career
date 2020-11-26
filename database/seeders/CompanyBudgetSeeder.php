@@ -2,17 +2,22 @@
 
 namespace Database\Seeders;
 
+use App\Models\CompanyBudget;
 use Illuminate\Database\Seeder;
 
 class CompanyBudgetSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
-        // User::factory(5)->create();
+        CompanyBudget::truncate();
+        CompanyBudget::create([
+            'company_id' => 1,
+            'amount' => 20000.99
+        ]);
+
+        CompanyBudget::create([
+            'company_id' => 2,
+            'amount' => 15000.89
+        ]);
     }
 }
