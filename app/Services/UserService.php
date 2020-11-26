@@ -26,4 +26,23 @@ class UserService
             'account' => "" . rand(11111111, 99999999),
         ]);
     }
+
+    public function updateUser($user, $request)
+    {
+        $data = [];
+
+        if ($request->first_name) {
+            $data['first_name'] = $request->first_name;
+        }
+
+        if ($request->last_name) {
+            $data['last_name'] = $request->last_name;
+        }
+
+        if ($request->email) {
+            $data['email'] = $request->email;
+        }
+
+        return $user->update($data);
+    }
 }
