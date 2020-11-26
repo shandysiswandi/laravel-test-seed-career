@@ -23,4 +23,24 @@ class CompanyService
             'address' => $request->address,
         ]);
     }
+
+    public function updateCompany($company, $request)
+    {
+        $data = [];
+
+        if ($request->name) {
+            $data['name'] = $request->name;
+        }
+
+        if ($request->address) {
+            $data['address'] = $request->address;
+        }
+
+        return $company->update($data);
+    }
+
+    public function deleteCompany($company)
+    {
+        return $company->delete();
+    }
 }
