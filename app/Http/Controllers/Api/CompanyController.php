@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Helpers\HttpStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Company\CreateCompanyRequest;
+use App\Http\Requests\Company\DeleteCompanyRequest;
 use App\Http\Requests\Company\GetCompanyRequest;
+use App\Http\Requests\Company\UpdateCompanyRequest;
 use App\Services\CompanyService;
 use App\Traits\ApiResponse;
 use App\Traits\Logger;
@@ -94,5 +96,59 @@ class CompanyController extends Controller
         $this->logResponse($request, $data);
 
         return $this->apiSuccess("Success create company", $data, HttpStatus::$CREATED);
+    }
+
+    public function updateCompany(UpdateCompanyRequest $request)
+    {
+        // log request
+        $this->logRequest($request);
+
+        $company = $this->companyService->findByID($request->id);
+        if (!$company) {
+            $this->logResponse($request, "Company not found");
+
+            return $this->apiError("Company not found", HttpStatus::$NOT_FOUND);
+        }
+
+        $companyUpdate = $this->companyService->updatecompany($company, $request);
+        if (!$companyUpdate) {
+            $this->logResponse($request, "Failed update company");
+
+            return $this->apiError("Failed update company", HttpStatus::$BAD_REQUEST);
+        }
+
+        $data = [
+            'id' => $company->id,
+            'name' => $request->name ?: $company->name,
+            'address' => $request->address ?: $company->address,
+        ];
+
+        $this->logResponse($request, $data);
+
+        return $this->apiSuccess("Success update company", $data, HttpStatus::$OK);
+    }
+
+    public function deleteCompany(DeleteCompanyRequest $request)
+    {
+        // log request
+        $this->logRequest($request);
+
+        $company = $this->companyService->findByID($request->id);
+        if (!$company) {
+            $this->logResponse($request, "Company not found");
+
+            return $this->apiError("Company not found", HttpStatus::$NOT_FOUND);
+        }
+
+        $deleteCompany = $this->companyService->deleteCompany($company);
+        if (!$deleteCompany) {
+            $this->logResponse($request, "Failed delete company");
+
+            return $this->apiError("Failed delete company", HttpStatus::$BAD_REQUEST);
+        }
+
+        $this->logResponse($request);
+
+        return $this->apiSuccess("Success delete company", null, HttpStatus::$OK);
     }
 }
