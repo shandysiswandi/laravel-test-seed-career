@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\HttpStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\CreateUserRequest;
 use App\Http\Requests\User\GetUserRequest;
 use App\Services\UserService;
 use App\Traits\ApiResponse;
@@ -23,7 +25,7 @@ class UserController extends Controller
         if (!$user) {
             $this->logResponse($request, "User Not Found");
 
-            return $this->apiError("User Not Found", 404);
+            return $this->apiError("User Not Found", HttpStatus::$NOT_FOUND);
         }
 
         $data = [
@@ -67,5 +69,37 @@ class UserController extends Controller
         $this->logResponse($request, $data);
 
         return $this->apiSuccess("Success get users", $data);
+    }
+
+    public function createUser(CreateUserRequest $request, UserService $userService)
+    {
+        // log request
+        $this->logRequest($request);
+
+        $company = $userService->companyService->findById($request->company_id);
+        if (!$company) {
+            $this->logResponse($request, "Company ID given not found");
+
+            return $this->apiError("Company ID given not found", HttpStatus::$NOT_FOUND);
+        }
+
+        $user = $userService->createUser($request);
+        if (!$user) {
+            $this->logResponse($request, "Failed create user");
+
+            return $this->apiError("Failed create user", HttpStatus::$BAD_REQUEST);
+        }
+
+        // log response
+        $data = [
+            'id' => $user->id,
+            'company' => $company->name,
+            'fullName' => "$user->first_name $user->last_name",
+            'email' => $user->email,
+            'account' => $user->account,
+        ];
+        $this->logResponse($request, $data);
+
+        return $this->apiSuccess("Success create user", $data, HttpStatus::$CREATED);
     }
 }
