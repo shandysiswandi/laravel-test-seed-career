@@ -9,6 +9,7 @@ Route::group(['middleware' => ['force.json']], function () {
     // user
     Route::post('getUser', [UserController::class, 'getUser']);
     Route::post('getListUser', [UserController::class, 'getListUser']);
+    Route::post('createUser', [UserController::class, 'createUser']);
 
     // company
     Route::post('getCompany', [CompanyController::class, 'getCompany']);
