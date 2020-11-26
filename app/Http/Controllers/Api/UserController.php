@@ -6,6 +6,7 @@ use App\Helpers\HttpStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\CreateUserRequest;
 use App\Http\Requests\User\GetUserRequest;
+use App\Http\Requests\User\UpdateUserRequest;
 use App\Services\CompanyService;
 use App\Services\UserService;
 use App\Traits\ApiResponse;
@@ -108,8 +109,45 @@ class UserController extends Controller
             'email' => $user->email,
             'account' => $user->account,
         ];
+
         $this->logResponse($request, $data);
 
         return $this->apiSuccess("Success create user", $data, HttpStatus::$CREATED);
+    }
+
+    public function updateUser(UpdateUserRequest $request)
+    {
+        // log request
+        $this->logRequest($request);
+
+        $user = $this->userService->findByIDWithCompany($request->id);
+        if (!$user) {
+            $this->logResponse($request, "User not found");
+
+            return $this->apiError("User not found", HttpStatus::$NOT_FOUND);
+        }
+
+        $userUpdate = $this->userService->updateUser($user, $request);
+        if (!$userUpdate) {
+            $this->logResponse($request, "Failed update user");
+
+            return $this->apiError("Failed update user", HttpStatus::$BAD_REQUEST);
+        }
+
+        $fName = $request->first_name ?: $user->first_name;
+        $lName = $request->last_name ?: $user->last_name;
+        $email = $request->email ?: $user->email;
+
+        $data = [
+            'id' => $user->id,
+            'company' => $user->company->name,
+            'fullName' => "$fName $lName",
+            'email' => $email,
+            'account' => $user->account,
+        ];
+
+        $this->logResponse($request, $data);
+
+        return $this->apiSuccess("Success update user", $data, HttpStatus::$OK);
     }
 }
