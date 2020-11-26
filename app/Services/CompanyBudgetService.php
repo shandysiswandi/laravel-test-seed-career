@@ -6,13 +6,13 @@ use App\Models\CompanyBudget;
 
 class CompanyBudgetService
 {
-    public function findByID($id)
+    public function findByIDWithCompany($id)
     {
-        return CompanyBudget::find($id);
+        return CompanyBudget::with('company')->find($id);
     }
 
-    public function listCompanyBudget()
+    public function listCompanyBudgetWithCompany()
     {
-        return CompanyBudget::all();
+        return CompanyBudget::with('company')->get();
     }
 }
