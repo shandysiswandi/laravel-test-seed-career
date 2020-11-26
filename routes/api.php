@@ -14,6 +14,7 @@ Route::group(['middleware' => ['force.json']], function () {
     // company
     Route::post('getCompany', [CompanyController::class, 'getCompany']);
     Route::post('getListCompany', [CompanyController::class, 'getListCompany']);
+    Route::post('createCompany', [CompanyController::class, 'createCompany']);
 
     // company budget
     Route::post('getCompanyBudget', [CompanyBudgetController::class, 'getCompanyBudget']);
