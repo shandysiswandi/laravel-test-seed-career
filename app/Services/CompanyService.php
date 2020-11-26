@@ -15,4 +15,12 @@ class CompanyService
     {
         return Company::all();
     }
+
+    public function createCompany($request)
+    {
+        return Company::create([
+            'name' => $request->name,
+            'address' => $request->address,
+        ]);
+    }
 }
