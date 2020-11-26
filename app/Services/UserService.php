@@ -11,6 +11,11 @@ class UserService
         return User::with('company')->find($id);
     }
 
+    public function findByID($id)
+    {
+        return User::find($id);
+    }
+
     public function listUserWithCompany()
     {
         return User::with('company')->get();
@@ -44,5 +49,10 @@ class UserService
         }
 
         return $user->update($data);
+    }
+
+    public function deleteUser($user)
+    {
+        return $user->delete();
     }
 }
